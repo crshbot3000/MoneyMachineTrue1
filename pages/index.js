@@ -1,12 +1,12 @@
-import React from 'react';
-import ProfitDisplay from './ProfitDisplay';
+const React = require('react');
 
-export default function Home() {
+function HomePage() {
   return (
-    <main style={{ fontFamily: 'Arial', padding: '2rem', textAlign: 'center' }}>
-      <h1>💸 Welcome to the Money Machine 💸</h1>
-      <p>Your automated profit engine is running.</p>
-      <ProfitDisplay />
-    </main>
+    React.createElement('div', null,
+      React.createElement('h1', null, '💸 Money Machine Activated'),
+      React.createElement('p', null, 'Deploying clean with CommonJS compatibility.')
+    )
   );
 }
+
+module.exports = HomePage;
