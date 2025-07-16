@@ -1,10 +1,15 @@
-import React from 'react';
-
-export default function Home() {
-  return (
-    <div>
-      <h1>🚀 Welcome to Money Machine</h1>
-      <p>This system is live and auto-optimized.</p>
-    </div>
-  );
+{
+  "name": "money-machine-true1",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "14.1.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  }
 }
