@@ -1,16 +1,16 @@
 import React from 'react';
-import { Web3Modal } from '@web3modal/standalone';
 import {
+  WagmiConfig,
   configureChains,
   createClient,
-  WagmiConfig,
   useAccount,
   useConnect,
 } from 'wagmi';
 import { mainnet } from 'wagmi/chains';
-import { w3mConnectors, w3mProvider } from '@web3modal/ethereum';
+import { w3mProvider, w3mConnectors } from '@web3modal/ethereum';
+import { Web3Modal } from '@web3modal/standalone';
 
-const projectId = 'cc3efe1b4ce0cfe11e6d260d7c3a6a82'; // your WalletConnect ID
+const projectId = 'cc3efe1b4ce0cfe11e6d260d7c3a6a82'; // ✅ Use your own WalletConnect Project ID
 
 const { chains, provider } = configureChains(
   [mainnet],
@@ -25,16 +25,18 @@ const wagmiClient = createClient({
 
 const web3Modal = new Web3Modal({ projectId });
 
-function WalletConnectButton() {
+function ConnectButton() {
   const { isConnected, address } = useAccount();
   const { connect, connectors } = useConnect();
 
   return (
     <div>
       {!isConnected ? (
-        <button onClick={() => web3Modal.openModal()}>Connect Wallet</button>
+        <button onClick={() => web3Modal.openModal()}>
+          Connect Wallet
+        </button>
       ) : (
-        <p>Connected: {address}</p>
+        <p>Connected as {address}</p>
       )}
     </div>
   );
@@ -43,9 +45,9 @@ function WalletConnectButton() {
 export default function Home() {
   return (
     <WagmiConfig client={wagmiClient}>
-      <div style={{ textAlign: 'center', marginTop: '100px' }}>
-        <h1>Money Machine: WalletConnect Ready</h1>
-        <WalletConnectButton />
+      <div style={{ padding: '2rem', textAlign: 'center' }}>
+        <h1>Money Machine Wallet Portal</h1>
+        <ConnectButton />
       </div>
     </WagmiConfig>
   );
