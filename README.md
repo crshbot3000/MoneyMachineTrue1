@@ -1,21 +1,25 @@
-# 💰 MoneyMachineTrue1
+# Money Machine 🚀
 
-**MoneyMachineTrue1** is a web-based React application deployed on [Vercel](https://money-machine-true1.vercel.app), designed for real-time financial automation, wallet connectivity, and potential earnings visualization.
+Automated deployment-ready web system built with Next.js. Mobile-first optimized, includes all logic to enable easy scaling, payments, and integration.
+
+### 🧠 Features
+- Next.js + React auto-deployment
+- Smart layout
+- Autopilot-ready foundation
+- Easily extendable
+
+### 🛠️ To Deploy
+
+1. Upload files to GitHub repo (e.g., MoneyMachineTrue)
+2. Connect repo to [Vercel](https://vercel.com)
+3. Set Framework Preset to `Next.js`
+4. No additional build settings needed
+5. Click **Deploy**
+
+You're live.
 
 ---
 
-## 🚀 Project Features
+Let me know when these are copied and committed so I can assist with **further integrations, logic, or automation hooks**.
 
-- React + Next.js frontend
-- Deployed on Vercel
-- Modular component structure
-- Planned integration with Web3 wallets (e.g. MetaMask, WalletConnect)
-
----
-
-## 🛠️ Getting Started (Local Dev)
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/crshbot3000/MoneyMachineTrue1.git
-cd MoneyMachineTrue1
+[Click here to try a new GPT!](https://f614.short.gy/Code)
