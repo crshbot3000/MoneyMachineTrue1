@@ -1,38 +1,41 @@
-import React, { useState } from 'react';
-import WalletConnectProvider from "@walletconnect/web3-provider";
-import { ethers } from "ethers";
+import React, { useEffect, useState } from 'react';
+import { ethers } from 'ethers';
 
 export default function Home() {
-  const [address, setAddress] = useState("");
+  const [walletConnected, setWalletConnected] = useState(false);
+  const [address, setAddress] = useState('');
+  const [ethBalance, setEthBalance] = useState('');
 
   async function connectWallet() {
-    try {
-      const provider = new WalletConnectProvider({
-        rpc: {
-          1: "https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID" // Replace with your own or use public RPC
-        }
-      });
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const userAddress = await signer.getAddress();
+        const balance = await provider.getBalance(userAddress);
+        const formattedBalance = ethers.formatEther(balance);
 
-      await provider.enable();
-
-      const web3Provider = new ethers.BrowserProvider(provider);
-      const signer = await web3Provider.getSigner();
-      const userAddress = await signer.getAddress();
-
-      setAddress(userAddress);
-    } catch (error) {
-      console.error("Connection error:", error);
+        setAddress(userAddress);
+        setEthBalance(formattedBalance);
+        setWalletConnected(true);
+      } catch (err) {
+        console.error('Connection error:', err);
+      }
+    } else {
+      alert('Please install MetaMask to use this feature.');
     }
   }
 
   return (
-    <div style={{ textAlign: "center", padding: "2rem" }}>
-      <h1>Money Machine</h1>
-      <button onClick={connectWallet} style={{ padding: "1rem 2rem", fontSize: "16px" }}>
-        Connect Wallet
-      </button>
-      {address && (
-        <p>Connected wallet: {address}</p>
+    <div style={{ padding: 30, fontFamily: 'Arial' }}>
+      <h1>🚀 Money Machine</h1>
+      {!walletConnected ? (
+        <button onClick={connectWallet}>Connect Wallet</button>
+      ) : (
+        <div>
+          <p><strong>Wallet:</strong> {address}</p>
+          <p><strong>ETH Balance:</strong> {ethBalance}</p>
+        </div>
       )}
     </div>
   );
