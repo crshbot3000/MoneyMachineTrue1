@@ -1,43 +1,50 @@
-import { useEffect } from 'react';
-import { ethers } from 'ethers';
+import React from 'react';
 import { Web3Modal } from '@web3modal/standalone';
-import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum';
-import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { configureChains, createClient, WagmiConfig, useAccount, useConnect } from 'wagmi';
 import { mainnet } from 'wagmi/chains';
+import { w3mConnectors, w3mProvider } from '@web3modal/ethereum';
 
 const projectId = 'cc3efe1b4ce0cfe11e6d260d7c3a6a82';
 
-const chains = [mainnet];
-
-const { provider } = configureChains(chains, [w3mProvider({ projectId })]);
+const { provider, chains } = configureChains(
+  [mainnet],
+  [w3mProvider({ projectId })]
+);
 
 const wagmiClient = createClient({
   autoConnect: true,
   connectors: w3mConnectors({ projectId, chains }),
-  provider,
+  provider
 });
 
-const ethereumClient = new EthereumClient(wagmiClient, chains);
+const web3Modal = new Web3Modal({ projectId, standaloneChains: [mainnet.id] });
 
-export default function Home() {
-  useEffect(() => {
-    const web3Modal = new Web3Modal({ projectId, standaloneChains: [mainnet.id] });
+function WalletConnectButton() {
+  const { isConnected, address } = useAccount();
+  const { connect, connectors } = useConnect();
 
-    document.getElementById('connectButton').addEventListener('click', async () => {
-      const provider = await web3Modal.connect();
-      const ethersProvider = new ethers.providers.Web3Provider(provider);
-      const signer = ethersProvider.getSigner();
-      const address = await signer.getAddress();
-      alert(`Connected wallet: ${address}`);
-    });
-  }, []);
+  const handleConnect = async () => {
+    web3Modal.openModal();
+  };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '100px' }}>
-      <h1>WalletConnect Integration</h1>
-      <button id="connectButton" style={{ fontSize: '18px', padding: '10px 20px' }}>
-        Connect Wallet
-      </button>
+    <div>
+      {!isConnected ? (
+        <button onClick={handleConnect}>Connect Wallet</button>
+      ) : (
+        <p>Connected: {address}</p>
+      )}
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <WagmiConfig client={wagmiClient}>
+      <div style={{ textAlign: 'center', marginTop: '100px' }}>
+        <h1>WalletConnect Only</h1>
+        <WalletConnectButton />
+      </div>
+    </WagmiConfig>
   );
 }
