@@ -1,12 +1,10 @@
-const React = require('react');
+import React from 'react';
 
-function HomePage() {
+export default function Home() {
   return (
-    React.createElement('div', null,
-      React.createElement('h1', null, '💸 Money Machine Activated'),
-      React.createElement('p', null, 'Deploying clean with CommonJS compatibility.')
-    )
+    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
+      <h1>💸 Money Machine Activated</h1>
+      <p>Deploying clean with CommonJS compatibility.</p>
+    </div>
   );
 }
-
-module.exports = HomePage;
