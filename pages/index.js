@@ -1,36 +1,43 @@
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
-import { InjectedConnector } from 'wagmi/connectors/injected';
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
+import { useEffect } from 'react';
+import { ethers } from 'ethers';
+import { Web3Modal } from '@web3modal/standalone';
+import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { mainnet } from 'wagmi/chains';
+
+const projectId = 'cc3efe1b4ce0cfe11e6d260d7c3a6a82';
+
+const chains = [mainnet];
+
+const { provider } = configureChains(chains, [w3mProvider({ projectId })]);
+
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors: w3mConnectors({ projectId, chains }),
+  provider,
+});
+
+const ethereumClient = new EthereumClient(wagmiClient, chains);
 
 export default function Home() {
-  const { address, isConnected } = useAccount();
-  const { connect } = useConnect({
-    connector: new WalletConnectConnector({
-      options: {
-        projectId: 'YOUR_PROJECT_ID', // Optional but recommended
-        metadata: {
-          name: "Money Machine",
-          description: "Crypto Store",
-          url: "https://money-machine-true1.vercel.app",
-          icons: ["https://money-machine-true1.vercel.app/icon.png"]
-        }
-      }
-    })
-  });
+  useEffect(() => {
+    const web3Modal = new Web3Modal({ projectId, standaloneChains: [mainnet.id] });
 
-  const { disconnect } = useDisconnect();
+    document.getElementById('connectButton').addEventListener('click', async () => {
+      const provider = await web3Modal.connect();
+      const ethersProvider = new ethers.providers.Web3Provider(provider);
+      const signer = ethersProvider.getSigner();
+      const address = await signer.getAddress();
+      alert(`Connected wallet: ${address}`);
+    });
+  }, []);
 
   return (
-    <div style={{ padding: 32 }}>
-      <h1>Money Machine Wallet Connect</h1>
-      {!isConnected ? (
-        <button onClick={() => connect()}>Connect Wallet</button>
-      ) : (
-        <>
-          <p>Connected as: {address}</p>
-          <button onClick={() => disconnect()}>Disconnect</button>
-        </>
-      )}
+    <div style={{ textAlign: 'center', marginTop: '100px' }}>
+      <h1>WalletConnect Integration</h1>
+      <button id="connectButton" style={{ fontSize: '18px', padding: '10px 20px' }}>
+        Connect Wallet
+      </button>
     </div>
   );
 }
