@@ -1,26 +1,21 @@
-// components/WalletConnectButton.js
 import { useEffect, useState } from 'react';
+import { ethers } from 'ethers';
 
 export default function WalletConnectButton() {
   const [account, setAccount] = useState(null);
 
   const connectWallet = async () => {
-    if (window.ethereum) {
-      try {
-        const [selectedAccount] = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        setAccount(selectedAccount);
-      } catch (error) {
-        console.error("User rejected the request.");
-      }
-    } else {
-      alert('Please install MetaMask to use this feature.');
-    }
+    if (!window.ethereum) return alert("MetaMask is required!");
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const address = await signer.getAddress();
+    setAccount(address);
   };
 
   return (
-    <div style={{ marginTop: '1rem' }}>
+    <div>
       <button onClick={connectWallet}>
-        {account ? `Connected: ${account.slice(0, 6)}...${account.slice(-4)}` : 'Connect Wallet'}
+        {account ? `Connected: ${account.substring(0, 6)}...` : 'Connect Wallet'}
       </button>
     </div>
   );
