@@ -1,41 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { ethers } from 'ethers';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { InjectedConnector } from 'wagmi/connectors/injected';
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 
 export default function Home() {
-  const [walletConnected, setWalletConnected] = useState(false);
-  const [address, setAddress] = useState('');
-  const [ethBalance, setEthBalance] = useState('');
-
-  async function connectWallet() {
-    if (typeof window.ethereum !== 'undefined') {
-      try {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const userAddress = await signer.getAddress();
-        const balance = await provider.getBalance(userAddress);
-        const formattedBalance = ethers.formatEther(balance);
-
-        setAddress(userAddress);
-        setEthBalance(formattedBalance);
-        setWalletConnected(true);
-      } catch (err) {
-        console.error('Connection error:', err);
+  const { address, isConnected } = useAccount();
+  const { connect } = useConnect({
+    connector: new WalletConnectConnector({
+      options: {
+        projectId: 'YOUR_PROJECT_ID', // Optional but recommended
+        metadata: {
+          name: "Money Machine",
+          description: "Crypto Store",
+          url: "https://money-machine-true1.vercel.app",
+          icons: ["https://money-machine-true1.vercel.app/icon.png"]
+        }
       }
-    } else {
-      alert('Please install MetaMask to use this feature.');
-    }
-  }
+    })
+  });
+
+  const { disconnect } = useDisconnect();
 
   return (
-    <div style={{ padding: 30, fontFamily: 'Arial' }}>
-      <h1>🚀 Money Machine</h1>
-      {!walletConnected ? (
-        <button onClick={connectWallet}>Connect Wallet</button>
+    <div style={{ padding: 32 }}>
+      <h1>Money Machine Wallet Connect</h1>
+      {!isConnected ? (
+        <button onClick={() => connect()}>Connect Wallet</button>
       ) : (
-        <div>
-          <p><strong>Wallet:</strong> {address}</p>
-          <p><strong>ETH Balance:</strong> {ethBalance}</p>
-        </div>
+        <>
+          <p>Connected as: {address}</p>
+          <button onClick={() => disconnect()}>Disconnect</button>
+        </>
       )}
     </div>
   );
