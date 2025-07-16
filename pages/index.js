@@ -25,11 +25,4 @@ export default function Home() {
       <h1>🚀 Welcome to Money Machine</h1>
       <p>This system is live and auto-optimized.</p>
 
-      <button onClick={connectWallet}>
-        {account ? 'Wallet Connected ✅' : 'Connect Wallet'}
-      </button>
-
-      <ProfitDisplay account={account} />
-    </div>
-  );
-}
+      <button onClick={connectWallet
